@@ -1,10 +1,16 @@
-function App() {
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { theme } from "./theme";
 
+function App() {
   return (
     <>
-      digital library
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        Digital Library
+      </ThemeProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
