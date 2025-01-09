@@ -9,4 +9,8 @@ export type bookType = {
   rating: number;
   rates: rateType[];
   id: number;
+  publisher: string;
+  physicalPrice: number;
+  numberOfPages: number;
+  description: string;
 };
