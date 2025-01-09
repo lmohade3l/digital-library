@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { bookType } from "../types/book";
@@ -23,18 +23,25 @@ export default function BooksList() {
 
     fetchData();
   }, []);
+
   return (
-    <Box sx={{ bgcolor: "#FCFCFA", px:12 }}>
+    <Box>
       {bookList ? (
-        <Box
-          sx={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr" }}
-        >
-          {bookList?.map((book: bookType) => (
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <BookCard book={book} />
-            </Box>
-          ))}
-        </Box>
+        <>
+          <Typography sx={{ fontSize: "20px" }}>کتاب‌ها</Typography>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr 1fr",
+            }}
+          >
+            {bookList?.map((book: bookType) => (
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <BookCard book={book} />
+              </Box>
+            ))}
+          </Box>
+        </>
       ) : (
         <EmptyMessage />
       )}

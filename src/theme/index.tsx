@@ -4,10 +4,14 @@ export const theme = createTheme({
   direction: 'rtl',
   palette: {
     primary: {
-      main: '#1976d2',
-      light: '#42a5f5',
+      main: '#00A2A4',
+      light: '#FCFCFA',
       dark: '#1565c0',
     },
+    secondary: {
+      main: "#F2F2EE",
+      dark: "#0000001A"
+    }
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
