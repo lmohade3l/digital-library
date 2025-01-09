@@ -66,7 +66,6 @@ export default function Home() {
     };
   }, []);
 
-  // Show error alert if there's an error
   if (error) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
@@ -85,7 +84,6 @@ export default function Home() {
     );
   }
 
-  // Always render BookList while loading to show skeletons
   if (isLoading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -94,7 +92,6 @@ export default function Home() {
     );
   }
 
-  // Show empty message if no books and not loading
   if (!bookList?.length) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -103,7 +100,6 @@ export default function Home() {
     );
   }
 
-  // Show books if we have them
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
       <BookList bookList={bookList} isLoading={false} />
