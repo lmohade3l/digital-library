@@ -4,6 +4,7 @@ import { getAuthorsNames } from "../utils/getAuthorsNames";
 import { getRartingAndCount } from "../utils/getRatingAndCount";
 import { priceSeparator } from "../utils/priceSeparator";
 import { theme } from "../theme";
+import { useNavigate } from "react-router-dom";
 
 export default function BookCard({
   book,
@@ -13,6 +14,7 @@ export default function BookCard({
   isLoading: boolean;
 }) {
   const phone = useMediaQuery(theme.breakpoints.down("xxs"));
+  const navigate = useNavigate();
 
   if (isLoading) {
     return phone ? (
@@ -32,7 +34,7 @@ export default function BookCard({
           variant="rectangular"
           width={200}
           height={150}
-          sx={{ borderRadius: "4px", width:"200px" }}
+          sx={{ borderRadius: "4px", width: "200px" }}
         />
         <Box
           sx={{
@@ -70,7 +72,7 @@ export default function BookCard({
             <Skeleton
               variant="rectangular"
               height={200}
-              sx={{ borderRadius: "4px", width:"130px" }}
+              sx={{ borderRadius: "4px", width: "130px" }}
             />
           </Box>
           <Box sx={{ mt: 1, height: "110px" }}>
@@ -157,6 +159,9 @@ export default function BookCard({
             mx: 1,
             justifyContent: "space-between",
           }}
+          onClick={() =>
+            book && navigate(`/book/${book.id}`, { state: { book } })
+          }
         >
           <Box>
             <Box sx={{ display: "flex", justifyContent: "center" }}>
