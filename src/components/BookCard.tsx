@@ -1,12 +1,90 @@
-import { Box, Typography, useMediaQuery } from "@mui/material";
+import { Box, Skeleton, Typography, useMediaQuery } from "@mui/material";
 import { bookType } from "../types/book";
 import { getAuthorsNames } from "../utils/getAuthorsNames";
 import { getRartingAndCount } from "../utils/getRatingAndCount";
 import { priceSeparator } from "../utils/priceSeparator";
 import { theme } from "../theme";
 
-export default function BookCard({ book }: { book: bookType }) {
+export default function BookCard({
+  book,
+  isLoading,
+}: {
+  book?: bookType;
+  isLoading: boolean;
+}) {
   const phone = useMediaQuery(theme.breakpoints.down("xxs"));
+
+  if (isLoading) {
+    return phone ? (
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+          py: 1.5,
+          px: 3,
+          bgcolor: "#FFF",
+          mt: 2,
+          border: `1px solid ${theme.palette.secondary.main}`,
+          borderRadius: "10px",
+        }}
+      >
+        <Skeleton
+          variant="rectangular"
+          width={200}
+          height={150}
+          sx={{ borderRadius: "4px", width:"200px" }}
+        />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
+          <Box sx={{ mt: 1 }}>
+            <Skeleton width="80%" />
+            <Skeleton width="60%" />
+            <Skeleton width="40%" />
+          </Box>
+          <Skeleton width="30%" />
+        </Box>
+      </Box>
+    ) : (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          py: 1.5,
+          px: 3,
+          bgcolor: "#FFF",
+          mt: 2,
+          border: `1px solid ${theme.palette.secondary.main}`,
+          borderRadius: "10px",
+          mx: 1,
+          justifyContent: "space-between",
+        }}
+      >
+        <Box>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Skeleton
+              variant="rectangular"
+              height={200}
+              sx={{ borderRadius: "4px", width:"130px" }}
+            />
+          </Box>
+          <Box sx={{ mt: 1, height: "110px" }}>
+            <Skeleton width="100%" />
+            <Skeleton width="80%" />
+            <Skeleton width="60%" />
+          </Box>
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Skeleton width={60} />
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -24,7 +102,7 @@ export default function BookCard({ book }: { book: bookType }) {
           }}
         >
           <img
-            src={book.coverUri}
+            src={book?.coverUri}
             alt=""
             style={{
               width: "100px",
@@ -39,7 +117,7 @@ export default function BookCard({ book }: { book: bookType }) {
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              width:"100%"
+              width: "100%",
             }}
           >
             <Box
@@ -50,15 +128,17 @@ export default function BookCard({ book }: { book: bookType }) {
               }}
             >
               <Typography sx={{ fontSize: "14px" }}>{book?.title}</Typography>
-              <Typography>{getAuthorsNames(book?.authors)}</Typography>
+              <Typography>
+                {book?.authors ? getAuthorsNames(book?.authors) : ""}
+              </Typography>
               <Typography sx={{ fontSize: "12px" }}>
-                {getRartingAndCount(book)}
+                {book ? getRartingAndCount(book) : ""}
               </Typography>
             </Box>
 
             <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
               <Typography sx={{ fontSize: "13px" }}>
-                {priceSeparator(book?.price)} ت
+                {book?.price ? priceSeparator(book?.price) : ""} ت
               </Typography>
             </Box>
           </Box>
@@ -81,7 +161,7 @@ export default function BookCard({ book }: { book: bookType }) {
           <Box>
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <img
-                src={book.coverUri}
+                src={book?.coverUri}
                 alt=""
                 style={{
                   width: "95%",
@@ -102,16 +182,18 @@ export default function BookCard({ book }: { book: bookType }) {
               }}
             >
               <Typography sx={{ fontSize: "14px" }}>{book?.title}</Typography>
-              <Typography>{getAuthorsNames(book?.authors)}</Typography>
+              <Typography>
+                {book?.authors ? getAuthorsNames(book?.authors) : ""}
+              </Typography>
               <Typography sx={{ fontSize: "12px" }}>
-                {getRartingAndCount(book)}
+                {book ? getRartingAndCount(book) : ""}
               </Typography>
             </Box>
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Typography sx={{ fontSize: "13px" }}>
-              {priceSeparator(book?.price)} ت
+              {book?.price ? priceSeparator(book?.price) : ""} ت
             </Typography>
           </Box>
         </Box>

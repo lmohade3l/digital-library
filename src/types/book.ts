@@ -8,4 +8,5 @@ export type bookType = {
   price: number;
   rating: number;
   rates: rateType[];
+  id: number;
 };
