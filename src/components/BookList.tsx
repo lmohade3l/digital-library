@@ -1,4 +1,4 @@
-import { Autocomplete, Box, TextField, Typography, useMediaQuery } from "@mui/material";
+import { Autocomplete, Box, Button, TextField, Typography, useMediaQuery } from "@mui/material";
 import { useState } from "react";
 import { bookType } from "../types/book";
 import { theme } from "../theme";
@@ -17,7 +17,7 @@ export default function BookList({
   const phone = useMediaQuery(theme.breakpoints.down("xxs"));
 
   const publishers = [...new Set(bookList?.map(book => book.publisher))];
-  
+
   const filteredBooks = selectedPublishers.length > 0
     ? bookList?.filter(book => selectedPublishers.includes(book.publisher))
     : bookList;
@@ -42,19 +42,26 @@ export default function BookList({
       ) : (
         <Box sx={{ display: "flex", maxWidth: "1000px", justifyContent: "center", flexDirection: "column" }}>
           <Typography sx={{ fontSize: "20px" }}>کتاب‌ها</Typography>
-          <Autocomplete
-            multiple
-            options={publishers}
-            value={selectedPublishers}
-            onChange={(_, newValue) => setSelectedPublishers(newValue)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="ناشران"
-                variant="outlined"
-              />
-            )}
-          />
+
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Autocomplete
+              multiple
+              options={publishers}
+              value={selectedPublishers}
+              onChange={(_, newValue) => setSelectedPublishers(newValue)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="ناشران"
+                  variant="outlined"
+                />
+              )}
+              sx={{ flex: 1 }}
+            />
+
+            <Button variant="contained" onClick={() => setSelectedPublishers([])} sx={{}}>پاک‌کردن فیلتر</Button>
+
+          </Box>
           <Box
             sx={{
               display: "grid",
