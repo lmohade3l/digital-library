@@ -102,6 +102,7 @@ export default function BookCard({
             border: `1px solid ${theme.palette.secondary.main}`,
             borderRadius: "10px",
           }}
+          onClick={() => book && navigate(`/book/${book.id}`, { state: { book } })}
         >
           <img
             src={book?.coverUri}
@@ -159,9 +160,8 @@ export default function BookCard({
             mx: 1,
             justifyContent: "space-between",
           }}
-          onClick={() =>
-            book && navigate(`/book/${book.id}`, { state: { book } })
-          }
+
+          onClick={() => book && navigate(`/book/${book.id}`, { state: { book } })}
         >
           <Box>
             <Box sx={{ display: "flex", justifyContent: "center" }}>
