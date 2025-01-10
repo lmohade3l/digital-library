@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { bookType } from "../types/book";
 import { theme } from "../theme";
 import BookCard from "./BookCard";
+import SortIcon from "../assets/images/sort-icon.png"
 
 export default function BookList({
   bookList,
@@ -24,12 +25,12 @@ export default function BookList({
   hasMore?: boolean
 }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  
+
   const mediumScreenTablet = useMediaQuery(theme.breakpoints.down("lg"));
   const smallTablet = useMediaQuery(theme.breakpoints.down("ssm"));
   const phone = useMediaQuery(theme.breakpoints.down("xxs"));
 
-  const publishers = useMemo(() => 
+  const publishers = useMemo(() =>
     [...new Set(bookList?.map(book => book.publisher))],
     [bookList]
   );
@@ -47,7 +48,7 @@ export default function BookList({
 
   const filteredAndSortedBooks = useMemo(() => {
     let result = [...bookList];
-    
+
     if (selectedPublishers.length > 0) {
       result = result.filter(book => selectedPublishers.includes(book.publisher));
     }
@@ -73,7 +74,7 @@ export default function BookList({
     return books.map((book: bookType, index) => {
       if (seenIds.has(book.id)) return null;
       seenIds.add(book.id);
-      
+
       const isLastBook = index === books.length - 1;
       const shouldAttachRef = !isLoading && hasMore && isLastBook && selectedPublishers.length === 0;
 
@@ -113,47 +114,69 @@ export default function BookList({
     <Box sx={{ display: "flex", maxWidth: "1000px", justifyContent: "center", flexDirection: "column", gap: 2 }}>
       <Typography sx={{ fontSize: "20px" }}>کتاب‌ها</Typography>
 
-      <Box sx={{ display: 'flex', gap: 2 }}>
-        <Autocomplete
-          multiple
-          options={publishers}
-          value={selectedPublishers}
-          onChange={(_, newValue) => setSelectedPublishers(newValue)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="ناشران"
-              variant="outlined"
-            />
-          )}
-          sx={{ flex: 1 }}
-        />
-        <Button 
-          variant="contained" 
-          onClick={() => setSelectedPublishers([])}
-        >
-          پاک‌کردن فیلتر
-        </Button>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems:'flex-start' }}>
+        <Box onClick={handleSortClick} sx={{ display: 'flex', gap: 0.7, alignItems: 'center', cursor: 'pointer', mt:'0.5rem' }}>
+          <Typography
+            sx={{ '&:hover': { textDecoration: 'underline' } }}
+          >
+            {sortOption}
+          </Typography>
+          <img src={SortIcon} alt="sort" style={{ width: '18px', height: '18px' }} />
+        </Box>
+        <Box sx={{ display: 'flex', gap: 2, }}>
+          {/* <Typography>فیلتر بر اساس ناشران</Typography> */}
+          <Autocomplete
+            multiple
+            options={publishers}
+            value={selectedPublishers}
+            onChange={(_, newValue) => setSelectedPublishers(newValue)}
+            disableClearable
+            limitTags={2}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="ناشران"
+                variant="outlined"
+              />
+            )}
+            sx={{
+              width: "20rem",
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "#FFFFFF",
+                minHeight: "2rem",
+              },
+              "& .MuiChip-root": {
+                paddingLeft: "12px"
+              },
+              "& .MuiAutocomplete-endAdornment": {
+                position: "absolute",
+                insetInlineStart: "9px"
+              }
+            }}
+          />
+          <Button
+            variant="contained"
+            onClick={() => setSelectedPublishers([])}
+            sx={{ height:"2.45rem" }}
+          >
+            پاک‌کردن فیلتر
+          </Button>
+        </Box>
       </Box>
 
-      <Typography
-        onClick={handleSortClick}
-        sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}
-      >
-        {sortOption}
-      </Typography>
-      
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={() => handleSortClose()}
+        // sx={{borderRadius:"12px"}}
       >
         <Typography sx={{ p: 2, fontWeight: 'bold' }}>مرتب کردن بر اساس</Typography>
-        {["همه", "گرانترین", "ارزانترین", "بیشترین امتیاز", "کمترین امتیاز"].map((option) => (
+        {["تازه‌ها", "گرانترین", "ارزانترین", "بیشترین امتیاز", "کمترین امتیاز"].map((option) => (
           <MenuItem key={option} onClick={() => handleSortClose(option)}>
             <FormControlLabel
               control={<Radio checked={sortOption === option} />}
               label={option}
+              sx={{ml:'1rem'}}
             />
           </MenuItem>
         ))}

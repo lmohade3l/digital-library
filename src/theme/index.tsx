@@ -1,4 +1,5 @@
 import { createTheme } from "@mui/material/styles";
+import { direction } from "html2canvas/dist/types/css/property-descriptors/direction";
 
 declare module '@mui/material/styles' {
   interface BreakpointOverrides {
@@ -54,5 +55,31 @@ export const theme = createTheme({
         },
       },
     },
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: ({_ }) => ({
+          zIndex: 888,
+          "& .MuiInputBase-root": {
+            padding: "2px",
+            direction:"rtl"
+          },
+        }),
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        fullWidth: true,
+      },
+      styleOverrides: {
+        root: {
+          "& .MuiFormLabel-root": {
+            top: "-5px",
+            direction:'rtl'
+          }
+        }
+      }
+    },
+
+
   },
 });

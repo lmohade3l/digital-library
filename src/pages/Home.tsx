@@ -16,7 +16,7 @@ export default function Home() {
   const [offset, setOffset] = useState("1-0-0-16");
   const [hasMore, setHasMore] = useState(true);
   const [selectedPublishers, setSelectedPublishers] = useState<string[]>([]);
-  const [sortOption, setSortOption] = useState<string>("همه");
+  const [sortOption, setSortOption] = useState<string>("تازه‌ها");
   const observer = useRef<IntersectionObserver>();
 
   const loadCachedData = () => {
