@@ -12,14 +12,11 @@ const BookDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   
-  // Get book from location state
   const book: bookType | undefined = location.state?.book;
   
   React.useEffect(() => {
     if (!book && id) {
       navigate('/');
-      // Alternative: fetch book data
-      // fetchBookById(id).then(bookData => setBook(bookData));
     }
   }, [book, id, navigate]);
 

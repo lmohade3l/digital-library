@@ -101,6 +101,7 @@ export default function BookCard({
             mt: 2,
             border: `1px solid ${theme.palette.secondary.main}`,
             borderRadius: "10px",
+            width:"100%"
           }}
           onClick={() => book && navigate(`/book/${book.id}`, { state: { book } })}
         >
