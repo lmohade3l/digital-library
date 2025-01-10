@@ -48,12 +48,10 @@ export default function BookList({
   const filteredAndSortedBooks = useMemo(() => {
     let result = [...bookList];
     
-    // Apply publisher filter
     if (selectedPublishers.length > 0) {
       result = result.filter(book => selectedPublishers.includes(book.publisher));
     }
 
-    // Apply sorting
     switch (sortOption) {
       case "گرانترین":
         return result.sort((a, b) => b.price - a.price);

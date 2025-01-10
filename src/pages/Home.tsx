@@ -5,6 +5,10 @@ import { bookType } from "../types/book";
 import EmptyMessage from "../components/EmptyMessage";
 import BookList from "../components/BookList";
 
+const CACHE_KEY = 'taaghche_books_cache';
+const CACHE_TIMESTAMP_KEY = 'taaghche_books_cache_timestamp';
+const CACHE_DURATION = 24 * 60 * 60 * 1000;
+
 export default function Home() {
   const [bookList, setBookList] = useState<bookType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -14,6 +18,50 @@ export default function Home() {
   const [selectedPublishers, setSelectedPublishers] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState<string>("همه");
   const observer = useRef<IntersectionObserver>();
+
+  const loadCachedData = () => {
+    const cachedData = localStorage.getItem(CACHE_KEY);
+    const cachedTimestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);
+    
+    if (cachedData && cachedTimestamp) {
+      const timestamp = parseInt(cachedTimestamp);
+      const isExpired = Date.now() - timestamp > CACHE_DURATION;
+      
+      if (!isExpired) {
+        try {
+          const parsedData = JSON.parse(cachedData);
+          setBookList(parsedData.books);
+          setOffset(parsedData.nextOffset);
+          setHasMore(parsedData.hasMore);
+          setIsLoading(false);
+          return true;
+        } catch (error) {
+          console.error("Error parsing cached data:", error);
+          localStorage.removeItem(CACHE_KEY);
+          localStorage.removeItem(CACHE_TIMESTAMP_KEY);
+        }
+      } else {
+        localStorage.removeItem(CACHE_KEY);
+        localStorage.removeItem(CACHE_TIMESTAMP_KEY);
+      }
+    }
+    return false;
+  };
+
+  const updateCache = (books: bookType[], nextOffset: string, moreAvailable: boolean) => {
+    try {
+      const cacheData = {
+        books,
+        nextOffset,
+        hasMore: moreAvailable,
+        timestamp: Date.now()
+      };
+      localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
+      localStorage.setItem(CACHE_TIMESTAMP_KEY, Date.now().toString());
+    } catch (error) {
+      console.error("Error caching data:", error);
+    }
+  };
 
   const fetchData = async (currentOffset: string) => {
     try {
@@ -26,11 +74,19 @@ export default function Home() {
       );
 
       const newBooks = response?.data?.bookList?.books || [];
+      
       setBookList(prev => {
         const existingIds = new Set(prev.map(book => book.id));
-        const uniqueNewBooks = newBooks.filter((book:bookType) => !existingIds.has(book.id));
-        return [...prev, ...uniqueNewBooks];
-      }); 
+        const uniqueNewBooks = newBooks.filter((book: bookType) => !existingIds.has(book.id));
+        const updatedList = [...prev, ...uniqueNewBooks];
+        
+        if (currentOffset === "1-0-0-16") {
+          updateCache(updatedList, response?.data?.nextOffset, response?.data?.hasMore);
+        }
+        
+        return updatedList;
+      });
+      
       setHasMore(response?.data?.hasMore);
       setOffset(response?.data?.nextOffset);
     } catch (error) {
@@ -70,7 +126,13 @@ export default function Home() {
   }, [isLoading, hasMore, offset]);
 
   useEffect(() => {
-    fetchData(offset);
+    const hasCachedData = loadCachedData();
+    
+    if (!hasCachedData) {
+      fetchData(offset);
+    } else {
+      fetchData(offset);
+    }
 
     const handleOnline = () => {
       setError(null);
