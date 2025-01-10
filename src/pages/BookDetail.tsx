@@ -12,9 +12,9 @@ const BookDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { id } = useParams();
-  
+
   const book: bookType | undefined = location.state?.book;
-  
+
   React.useEffect(() => {
     if (!book && id) {
       navigate('/');
@@ -26,13 +26,17 @@ const BookDetail = () => {
       if (!bookDetailsRef.current) return;
 
       const canvas = await html2canvas(bookDetailsRef.current);
-      const imageBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-      
+      const imageBlob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
+
+      if (!imageBlob) {
+        throw new Error("Failed to create image blob.");
+      }
+
       if (navigator.share) {
         await navigator.share({
           title: `کتاب ${book?.title}`,
           text: `مشاهده جزئیات کتاب ${book?.title}`,
-          files: [new File([imageBlob], 'book-details.png', { type: 'image/png' })]
+          files: [new File([imageBlob], 'book-details.png', { type: 'image/png' })],
         });
       } else {
         const shareUrl = URL.createObjectURL(imageBlob);
@@ -77,8 +81,8 @@ const BookDetail = () => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'between', p: 4 }}>
       <Box sx={{ display: 'flex', gap: 4 }} ref={bookDetailsRef}>
-        <img 
-          src={book.coverUri} 
+        <img
+          src={book.coverUri}
           alt={`${book.title} cover`}
           style={{
             width: '256px',
@@ -92,11 +96,11 @@ const BookDetail = () => {
           <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
             {`کتاب ${book.title}`}
           </Typography>
-          
+
           <Typography>
             {`نویسنده: ${book.authors?.join('، ')}`}
           </Typography>
-          
+
           <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
             <Typography>امتیاز:</Typography>
             <Box>
@@ -104,29 +108,29 @@ const BookDetail = () => {
             </Box>
             <Typography>{`از ${getRartingAndCount(book).count} رای`}</Typography>
           </Box>
-          
+
           <Typography>
             {`قیمت: ${toPersianNumbers(priceSeparator(book.price))} ت`}
           </Typography>
-          
+
           <Typography>
             {`ناشر: ${book.publisher}`}
           </Typography>
-          
+
           <Typography>
             {`قیمت فیزیکی: ${toPersianNumbers(priceSeparator(book.physicalPrice))} ت`}
           </Typography>
-          
+
           <Typography>
             {`تعداد صفحات: ${toPersianNumbers(book.numberOfPages)}`}
           </Typography>
-          
+
           <Typography sx={{ maxWidth: '600px' }}>
-            {`توضیحات: ${book.descriptions}`}
+            {`توضیحات: ${book.description}`}
           </Typography>
-          
+
           <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
-            <Button 
+            <Button
               onClick={() => window.open(`https://taaghche.com/book/${book.id}`, '_blank')}
               variant="contained"
               color="primary"
@@ -140,7 +144,7 @@ const BookDetail = () => {
             >
               جزییات بیشتر
             </Button>
-            
+
             <Button
               onClick={handleShare}
               variant="contained"
