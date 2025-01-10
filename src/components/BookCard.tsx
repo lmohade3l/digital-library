@@ -2,7 +2,7 @@ import { Box, Skeleton, Typography, useMediaQuery } from "@mui/material";
 import { bookType } from "../types/book";
 import { getAuthorsNames } from "../utils/getAuthorsNames";
 import { getRartingAndCount } from "../utils/getRatingAndCount";
-import { priceSeparator } from "../utils/priceSeparator";
+import { priceSeparator, toPersianNumbers } from "../utils/numberUtils";
 import { theme } from "../theme";
 import { useNavigate } from "react-router-dom";
 
@@ -101,7 +101,7 @@ export default function BookCard({
             mt: 2,
             border: `1px solid ${theme.palette.secondary.main}`,
             borderRadius: "10px",
-            width:"100%"
+            width: "100%"
           }}
           onClick={() => book && navigate(`/book/${book.id}`, { state: { book } })}
         >
@@ -136,13 +136,13 @@ export default function BookCard({
                 {book?.authors ? getAuthorsNames(book?.authors) : ""}
               </Typography>
               <Typography sx={{ fontSize: "12px" }}>
-                {book ? getRartingAndCount(book) : ""}
+                {book ? getRartingAndCount(book).ratingCount : ""}
               </Typography>
             </Box>
 
             <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
               <Typography sx={{ fontSize: "13px" }}>
-                {book?.price ? priceSeparator(book?.price) : ""} ت
+                {book?.price ? toPersianNumbers(priceSeparator(book?.price)) : ""} ت
               </Typography>
             </Box>
           </Box>
@@ -192,14 +192,14 @@ export default function BookCard({
                 {book?.authors ? getAuthorsNames(book?.authors) : ""}
               </Typography>
               <Typography sx={{ fontSize: "12px" }}>
-                {book ? getRartingAndCount(book) : ""}
+                {book ? getRartingAndCount(book).ratingCount : ""}
               </Typography>
             </Box>
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Typography sx={{ fontSize: "13px" }}>
-              {book?.price ? priceSeparator(book?.price) : ""} ت
+            {book?.price ? toPersianNumbers(priceSeparator(book?.price)) : ""} ت
             </Typography>
           </Box>
         </Box>

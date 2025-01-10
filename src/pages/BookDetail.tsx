@@ -4,7 +4,8 @@ import { Box, Button, Typography, Skeleton } from '@mui/material';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { bookType } from '../types/book';
 import { theme } from '../theme';
-import { priceSeparator } from '../utils/priceSeparator';
+import { priceSeparator, toPersianNumbers } from '../utils/numberUtils';
+import { getRartingAndCount } from '../utils/getRatingAndCount';
 
 const BookDetail = () => {
   const bookDetailsRef = useRef(null);
@@ -99,13 +100,13 @@ const BookDetail = () => {
           <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
             <Typography>امتیاز:</Typography>
             <Box>
-              <Typography>{book.rating?.toFixed(1)}</Typography>
+              <Typography>{getRartingAndCount(book).rating}</Typography>
             </Box>
-            <Typography>{`از ${book.ratingCount || 0} رای`}</Typography>
+            <Typography>{`از ${getRartingAndCount(book).count} رای`}</Typography>
           </Box>
           
           <Typography>
-            {`قیمت: ${priceSeparator(book.price)} ت`}
+            {`قیمت: ${toPersianNumbers(priceSeparator(book.price))} ت`}
           </Typography>
           
           <Typography>
@@ -113,11 +114,11 @@ const BookDetail = () => {
           </Typography>
           
           <Typography>
-            {`قیمت فیزیکی: ${priceSeparator(book.physicalPrice)} ت`}
+            {`قیمت فیزیکی: ${toPersianNumbers(priceSeparator(book.physicalPrice))} ت`}
           </Typography>
           
           <Typography>
-            {`تعداد صفحات: ${book.numberOfPages}`}
+            {`تعداد صفحات: ${toPersianNumbers(book.numberOfPages)}`}
           </Typography>
           
           <Typography sx={{ maxWidth: '600px' }}>
