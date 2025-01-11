@@ -3,7 +3,7 @@ import { Box, Typography, useMediaQuery } from "@mui/material";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { bookType } from "../types/book";
 import { theme } from "../theme";
-import PersianEbookCard from "../components/BookMoreInfo";
+import PersianEbookCard from "../features/BookMoreInfo";
 import EmptyBookDetail from "../components/EmptyBookDetail";
 import { createBookDetailsData } from "../components/BookDetailData";
 import DetailButtons from "../components/DetailButtons";
