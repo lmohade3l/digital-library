@@ -35,7 +35,7 @@ export default function BookList({
 }: {
   bookList: bookType[];
   isLoading: boolean;
-  lastBookRef;
+  lastBookRef:  (node: HTMLDivElement) => void;
   selectedPublishers: string[];
   setSelectedPublishers: (value: string[]) => void;
   sortOption: string;
