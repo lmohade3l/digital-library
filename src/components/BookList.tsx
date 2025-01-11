@@ -1,5 +1,4 @@
 import {
-  Autocomplete,
   Box,
   Button,
   TextField,
@@ -33,7 +32,10 @@ export default function BookList({
   const smallTablet = useMediaQuery(theme.breakpoints.down("ssm"));
   const phone = useMediaQuery(theme.breakpoints.down("xxs"));
 
-  const publishers = useMemo(() => [...new Set(bookList.map((book) => book.publisher))], [bookList]);
+  const publishers = useMemo(
+    () => [...new Set(bookList.map((book) => book.publisher))],
+    [bookList]
+  );
 
   const handleSortClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -49,16 +51,20 @@ export default function BookList({
   const filteredAndSortedBooks = useMemo(() => {
     let result = [...bookList];
     if (selectedPublishers.length) {
-      result = result.filter((book) => selectedPublishers.includes(book.publisher));
+      result = result.filter((book) =>
+        selectedPublishers.includes(book.publisher)
+      );
     }
     const sortingOptions = {
-      "گرانترین": (a, b) => b.price - a.price,
-      "ارزانترین": (a, b) => a.price - b.price,
+      گرانترین: (a, b) => b.price - a.price,
+      ارزانترین: (a, b) => a.price - b.price,
       "بیشترین امتیاز": (a, b) => b.rating - a.rating,
       "کمترین امتیاز": (a, b) => a.rating - b.rating,
     };
 
-    return sortingOptions[sortOption] ? result.sort(sortingOptions[sortOption]) : result;
+    return sortingOptions[sortOption]
+      ? result.sort(sortingOptions[sortOption])
+      : result;
   }, [bookList, selectedPublishers, sortOption]);
 
   const renderBooks = (books: bookType[]) => {
@@ -71,7 +77,8 @@ export default function BookList({
         seenIds.add(book.id);
 
         const isLastBook = index === books.length - 1;
-        const attachRef = !isLoading && hasMore && isLastBook && !selectedPublishers.length;
+        const attachRef =
+          !isLoading && hasMore && isLastBook && !selectedPublishers.length;
 
         return (
           <Box
@@ -88,36 +95,64 @@ export default function BookList({
 
   const renderSkeletons = (count: number) =>
     Array.from({ length: count }, (_, index) => (
-      <Box key={`skeleton-${index}`} sx={{ display: "flex", justifyContent: "center" }}>
+      <Box
+        key={`skeleton-${index}`}
+        sx={{ display: "flex", justifyContent: "center" }}
+      >
         <BookCard isLoading={true} />
       </Box>
     ));
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", maxWidth: "1000px", gap: 2 }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        maxWidth: "1000px",
+        gap: 2,
+      }}
+    >
       <Typography sx={{ fontSize: "20px" }}>کتاب‌ها</Typography>
 
-      <Box sx={{ display: "flex", alignItems: "flex-start" }}>
-        <Box
+      <Box sx={{ display: "flex", gap:1.5 }}>
+        <Button
           onClick={handleSortClick}
           sx={{
             display: "flex",
             alignItems: "center",
             cursor: "pointer",
             gap: 0.7,
-            mt: "0.5rem",
+            border:"1px solid #000",
+            color:"#000",
+            borderRadius:"15px",
+            "&:hover" :{
+              background:"none"
+            }
           }}
         >
-          <Typography sx={{ "&:hover": { textDecoration: "underline" } }}>{sortOption}</Typography>
-          <img src={SortIcon} alt="sort" style={{ width: "18px", height: "18px" }} />
-        </Box>
+            {sortOption}
+          <img
+            src={SortIcon}
+            alt="sort"
+            style={{ width: "18px", height: "18px" }}
+          />
+        </Button>
 
-
-        <PublisherFilterMenu publishers={publishers} selectedPublishers={selectedPublishers} setSelectedPublishers={setSelectedPublishers} />
+        <PublisherFilterMenu
+          publishers={publishers}
+          selectedPublishers={selectedPublishers}
+          setSelectedPublishers={setSelectedPublishers}
+        />
       </Box>
 
-      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => handleSortClose()}>
-        <Typography sx={{ p: 2, fontWeight: "bold" }}>مرتب کردن بر اساس</Typography>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => handleSortClose()}
+      >
+        <Typography sx={{ p: 2, fontWeight: "bold" }}>
+          مرتب کردن بر اساس
+        </Typography>
         {[
           "تازه‌ها",
           "گرانترین",
@@ -141,8 +176,8 @@ export default function BookList({
           gridTemplateColumns: smallTablet
             ? "1fr 1fr"
             : mediumScreenTablet
-              ? "1fr 1fr 1fr 1fr"
-              : "1fr 1fr 1fr 1fr 1fr",
+            ? "1fr 1fr 1fr 1fr"
+            : "1fr 1fr 1fr 1fr 1fr",
           gap: 2,
         }}
       >
@@ -150,7 +185,13 @@ export default function BookList({
           ? renderSkeletons(8)
           : renderBooks(filteredAndSortedBooks)}
         {isLoading && bookList.length > 0 && !selectedPublishers.length && (
-          <Box sx={{ display: "flex", justifyContent: "center", gridColumn: "1/-1" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              gridColumn: "1/-1",
+            }}
+          >
             <BookCard isLoading={true} />
           </Box>
         )}

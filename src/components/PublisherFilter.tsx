@@ -9,6 +9,9 @@ import {
   Divider,
   Paper
 } from '@mui/material';
+import PulicherIcon from "../assets/images/publisher.png";
+
+
 
 const PublisherFilterMenu = ({ publishers, selectedPublishers, setSelectedPublishers }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -48,9 +51,10 @@ const PublisherFilterMenu = ({ publishers, selectedPublishers, setSelectedPublis
       <Button
         variant="outlined"
         onClick={handleClick}
-        sx={{ backgroundColor: '#FFFFFF', border:"1px solid #000", color:'#000' }}
+        sx={{ backgroundColor: '#FFFFFF', border:"1px solid #000", color:'#000', display:'flex', gap:0.4, borderRadius:"15px"}}
       >
         انتخاب ناشران
+        <img src={PulicherIcon} alt='' style={{width:"20px"}} />
       </Button>
       <Menu
         anchorEl={anchorEl}
