@@ -55,9 +55,19 @@ const BookDetail = () => {
             mb: 3,
           }}
         >
-          <Typography
-            sx={{ wordBreak: "break-word" }}
-          >{`کتاب‌ها / ${book?.title}`}</Typography>
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <Typography
+              onClick={() => history.back()}
+              sx={{
+                wordBreak: "break-word",
+                ":hover": { textDecoration: "underline" },
+                cursor: "pointer",
+              }}
+            >{`کتاب‌ها `}</Typography>
+            <Typography
+              sx={{ wordBreak: "break-word" }}
+            >{` / ${book?.title}`}</Typography>
+          </Box>
         </Box>
         <Box
           sx={{

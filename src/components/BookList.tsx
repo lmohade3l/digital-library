@@ -183,7 +183,7 @@ export default function BookList({
         sx={{
           display: "grid",
           gridTemplateColumns:phone?"1fr" : smallTablet
-            ? "1fr 1fr"
+            ? "1fr 1fr 1fr"
             : mediumScreenTablet
             ? "1fr 1fr 1fr 1fr"
             : "1fr 1fr 1fr 1fr 1fr",
