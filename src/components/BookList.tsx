@@ -15,6 +15,13 @@ import { theme } from "../theme";
 import BookCard from "./BookCard";
 import PublisherFilterMenu from "./PublisherFilter";
 import SortIcon from "../assets/images/sort-icon.png";
+import { t } from "../hooks/useTranslate";
+
+type SortOptionType =
+  | "گرانترین"
+  | "ارزانترین"
+  | "بیشترین امتیاز"
+  | "کمترین امتیاز";
 
 export default function BookList({
   bookList,
@@ -25,15 +32,15 @@ export default function BookList({
   sortOption,
   setSortOption,
   hasMore,
-} : {
-  bookList: bookType[],
-  isLoading: boolean,
-  lastBookRef,
-  selectedPublishers: string[],
-  setSelectedPublishers :(value:string[]) => void,
-  sortOption:string,
-  setSortOption: (value:string) => void,
-  hasMore: boolean,
+}: {
+  bookList: bookType[];
+  isLoading: boolean;
+  lastBookRef;
+  selectedPublishers: string[];
+  setSelectedPublishers: (value: string[]) => void;
+  sortOption: string;
+  setSortOption: (value: string) => void;
+  hasMore: boolean;
 }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -64,15 +71,18 @@ export default function BookList({
         selectedPublishers.includes(book.publisher)
       );
     }
-    const sortingOptions = {
-      گرانترین: (a:bookType, b:bookType) => b.price - a.price,
-      ارزانترین: (a:bookType, b:bookType) => a.price - b.price,
-      "بیشترین امتیاز": (a:bookType, b:bookType) => b.rating - a.rating,
-      "کمترین امتیاز": (a:bookType, b:bookType) => a.rating - b.rating,
+    const sortingOptions: Record<
+      SortOptionType,
+      (a: bookType, b: bookType) => number
+    > = {
+      گرانترین: (a, b) => b.price - a.price,
+      ارزانترین: (a, b) => a.price - b.price,
+      "بیشترین امتیاز": (a, b) => b.rating - a.rating,
+      "کمترین امتیاز": (a, b) => a.rating - b.rating,
     };
 
-    return sortingOptions[sortOption]
-      ? result.sort(sortingOptions[sortOption])
+    return sortingOptions[sortOption as SortOptionType]
+      ? result.sort(sortingOptions[sortOption as SortOptionType])
       : result;
   }, [bookList, selectedPublishers, sortOption]);
 
@@ -123,7 +133,7 @@ export default function BookList({
     >
       <Typography sx={{ fontSize: "20px" }}>کتاب‌ها</Typography>
 
-      <Box sx={{ display: "flex", gap:1.5 }}>
+      <Box sx={{ display: "flex", gap: 1.5 }}>
         <Button
           onClick={handleSortClick}
           sx={{
@@ -131,15 +141,15 @@ export default function BookList({
             alignItems: "center",
             cursor: "pointer",
             gap: 0.7,
-            border:"1px solid #000",
-            color:"#000",
-            borderRadius:"15px",
-            "&:hover" :{
-              background:"none"
-            }
+            border: "1px solid #000",
+            color: "#000",
+            borderRadius: "15px",
+            "&:hover": {
+              background: "none",
+            },
           }}
         >
-            {sortOption}
+          {sortOption}
           <img
             src={SortIcon}
             alt="sort"
@@ -163,11 +173,11 @@ export default function BookList({
           مرتب کردن بر اساس
         </Typography>
         {[
-          "تازه‌ها",
-          "گرانترین",
-          "ارزانترین",
-          "بیشترین امتیاز",
-          "کمترین امتیاز",
+          t("newest"),
+          t("mostExpensive"),
+          t("cheapest"),
+          t("highestRated"),
+          t("lowestRated"),
         ].map((option) => (
           <MenuItem key={option} onClick={() => handleSortClose(option)}>
             <FormControlLabel
@@ -182,7 +192,9 @@ export default function BookList({
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns:phone?"1fr" : smallTablet
+          gridTemplateColumns: phone
+            ? "1fr"
+            : smallTablet
             ? "1fr 1fr 1fr"
             : mediumScreenTablet
             ? "1fr 1fr 1fr 1fr"

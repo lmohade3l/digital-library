@@ -1,23 +1,21 @@
-import React from "react";
 import { Box, Typography } from "@mui/material";
+import { t } from "../hooks/useTranslate";
 
-interface BookRatingProps {
-  rating: string | number;
-  count: string | number;
-  phone: boolean;
-}
-
-export const BookRating: React.FC<BookRatingProps> = ({
+export default function BookRating({
   rating,
   count,
   phone,
-}) => {
+}: {
+  rating: string | number;
+  count: string | number;
+  phone: boolean;
+}) {
   return (
     <Box
       sx={{ display: "flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}
     >
       <Typography sx={{ fontSize: phone ? "0.875rem" : "1rem" }}>
-        امتیاز:
+        {t("rating")}:
       </Typography>
       <Box
         sx={{
@@ -25,17 +23,19 @@ export const BookRating: React.FC<BookRatingProps> = ({
           justifyContent: "center",
           alignItems: "center",
           bgcolor: "success.main",
-          px:1,
-          borderRadius:"12px"
+          px: 1,
+          borderRadius: "12px",
         }}
       >
-        <Typography sx={{ fontSize: phone ? "0.875rem" : "1rem", color:'#FFF' }}>
+        <Typography
+          sx={{ fontSize: phone ? "0.875rem" : "1rem", color: "#FFF" }}
+        >
           {rating}
         </Typography>
       </Box>
-      <Typography
-        sx={{ fontSize: phone ? "0.875rem" : "1rem" }}
-      >{`از ${count} رای`}</Typography>
+      <Typography sx={{ fontSize: phone ? "0.875rem" : "1rem" }}>{`${t(
+        "from"
+      )} ${count} ${t("vote")}`}</Typography>
     </Box>
   );
-};
+}

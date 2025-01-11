@@ -3,6 +3,7 @@ import { theme } from "../theme";
 import html2canvas from "html2canvas";
 import { bookType } from "../types/book";
 import { RefObject } from "react";
+import { t } from "../hooks/useTranslate";
 
 export default function DetailButtons({
   book,
@@ -28,8 +29,8 @@ export default function DetailButtons({
 
       if (navigator.share) {
         await navigator.share({
-          title: `کتاب ${book?.title}`,
-          text: `مشاهده جزئیات کتاب ${book?.title}`,
+          title: `${t("book")} ${book?.title}`,
+          text: `${t("seeBookDetail")} ${book?.title}`,
           files: [
             new File([imageBlob], "book-details.png", { type: "image/png" }),
           ],
@@ -67,7 +68,7 @@ export default function DetailButtons({
           fontSize: phone ? "0.875rem" : "1rem",
         }}
       >
-        جزییات بیشتر
+        {t("moreInfo")}
       </Button>
 
       <Button
@@ -84,7 +85,7 @@ export default function DetailButtons({
           fontSize: phone ? "0.875rem" : "1rem",
         }}
       >
-        اشتراک‌گذاری
+        {t("share")}
       </Button>
     </Box>
   );

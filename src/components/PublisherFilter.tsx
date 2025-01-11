@@ -9,6 +9,7 @@ import {
   Paper,
 } from "@mui/material";
 import PulicherIcon from "../assets/images/publisher.png";
+import { t } from "../hooks/useTranslate";
 
 const PublisherFilterMenu = ({
   publishers,
@@ -17,7 +18,7 @@ const PublisherFilterMenu = ({
 }: {
   publishers: string[];
   selectedPublishers: string[];
-  setSelectedPublishers: (value : string[]) => void
+  setSelectedPublishers: (value: string[]) => void;
 }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [tempSelected, setTempSelected] = useState(selectedPublishers);
@@ -32,7 +33,7 @@ const PublisherFilterMenu = ({
     setAnchorEl(null);
   };
 
-  const handleCheckboxChange = (publisher:string) => {
+  const handleCheckboxChange = (publisher: string) => {
     setTempSelected((prev) =>
       prev.includes(publisher)
         ? prev.filter((p) => p !== publisher)
@@ -66,7 +67,7 @@ const PublisherFilterMenu = ({
         }}
       >
         {selectedPublishers?.length === 0
-          ? "انتخاب ناشران "
+          ? t("choosePublishers")
           : selectedPublishers?.join("، ").substring(0, 20) +
             (selectedPublishers?.length > 1 &&
             selectedPublishers?.join("، ")?.length > 20
@@ -129,7 +130,7 @@ const PublisherFilterMenu = ({
               onClick={handleApplyFilter}
               size="small"
             >
-              اعمال فیلتر
+              {t("applyfilter")}
             </Button>
             <Button
               variant="outlined"
@@ -137,7 +138,7 @@ const PublisherFilterMenu = ({
               onClick={handleRemoveFilter}
               size="small"
             >
-              حذف فیلتر
+              {t("removeFilter")}
             </Button>
           </Box>
         </Box>

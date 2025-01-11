@@ -4,9 +4,10 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { bookType } from "../types/book";
 import EmptyMessage from "../components/EmptyMessage";
 import BookList from "../components/BookList";
+import { t } from "../hooks/useTranslate";
 
-const CACHE_KEY = 'taaghche_books_cache';
-const CACHE_TIMESTAMP_KEY = 'taaghche_books_cache_timestamp';
+const CACHE_KEY = "taaghche_books_cache";
+const CACHE_TIMESTAMP_KEY = "taaghche_books_cache_timestamp";
 const CACHE_DURATION = 24 * 60 * 60 * 1000;
 
 export default function Home() {
@@ -22,11 +23,11 @@ export default function Home() {
   const loadCachedData = () => {
     const cachedData = localStorage.getItem(CACHE_KEY);
     const cachedTimestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);
-    
+
     if (cachedData && cachedTimestamp) {
       const timestamp = parseInt(cachedTimestamp);
       const isExpired = Date.now() - timestamp > CACHE_DURATION;
-      
+
       if (!isExpired) {
         try {
           const parsedData = JSON.parse(cachedData);
@@ -48,13 +49,17 @@ export default function Home() {
     return false;
   };
 
-  const updateCache = (books: bookType[], nextOffset: string, moreAvailable: boolean) => {
+  const updateCache = (
+    books: bookType[],
+    nextOffset: string,
+    moreAvailable: boolean
+  ) => {
     try {
       const cacheData = {
         books,
         nextOffset,
         hasMore: moreAvailable,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
       localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
       localStorage.setItem(CACHE_TIMESTAMP_KEY, Date.now().toString());
@@ -66,7 +71,7 @@ export default function Home() {
   const fetchData = async (currentOffset: string) => {
     try {
       if (!navigator.onLine) {
-        throw new Error("اتصال به اینترنت برقرار نیست. لطفاً اتصال خود را بررسی کنید.");
+        throw new Error(t("noConnectionErrorMessage"));
       }
 
       const response = await axios.get(
@@ -74,19 +79,25 @@ export default function Home() {
       );
 
       const newBooks = response?.data?.bookList?.books || [];
-      
-      setBookList(prev => {
-        const existingIds = new Set(prev.map(book => book.id));
-        const uniqueNewBooks = newBooks.filter((book: bookType) => !existingIds.has(book.id));
+
+      setBookList((prev) => {
+        const existingIds = new Set(prev.map((book) => book.id));
+        const uniqueNewBooks = newBooks.filter(
+          (book: bookType) => !existingIds.has(book.id)
+        );
         const updatedList = [...prev, ...uniqueNewBooks];
-        
+
         if (currentOffset === "1-0-0-16") {
-          updateCache(updatedList, response?.data?.nextOffset, response?.data?.hasMore);
+          updateCache(
+            updatedList,
+            response?.data?.nextOffset,
+            response?.data?.hasMore
+          );
         }
-        
+
         return updatedList;
       });
-      
+
       setHasMore(response?.data?.hasMore);
       setOffset(response?.data?.nextOffset);
     } catch (error) {
@@ -94,40 +105,43 @@ export default function Home() {
 
       if (error instanceof AxiosError) {
         if (error.code === "ERR_NETWORK") {
-          setError("خطا در ارتباط با سرور. لطفاً بعداً دوباره امتحان کنید.");
+          setError(t("serverErrorMessage"));
         } else if (error.response?.status === 404) {
-          setError("اطلاعات مورد نظر یافت نشد.");
+          setError(t("notFoundErrorMessage"));
         } else {
-          setError("خطایی در دریافت اطلاعات رخ داد. لطفاً دوباره تلاش کنید.");
+          setError(t("getDataErrorMessage"));
         }
       } else if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError("خطای ناشناخته رخ داد. لطفاً دوباره تلاش کنید.");
+        setError(t("unknownErrorMessage"));
       }
     } finally {
       setIsLoading(false);
     }
   };
 
-  const lastBookElementRef = useCallback((node: HTMLDivElement) => {
-    if (isLoading) return;
+  const lastBookElementRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (isLoading) return;
 
-    if (observer.current) observer.current.disconnect();
+      if (observer.current) observer.current.disconnect();
 
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
-        setIsLoading(true);
-        fetchData(offset);
-      }
-    });
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setIsLoading(true);
+          fetchData(offset);
+        }
+      });
 
-    if (node) observer.current.observe(node);
-  }, [isLoading, hasMore, offset]);
+      if (node) observer.current.observe(node);
+    },
+    [isLoading, hasMore, offset]
+  );
 
   useEffect(() => {
     const hasCachedData = loadCachedData();
-    
+
     if (!hasCachedData) {
       fetchData(offset);
     } else {
@@ -140,23 +154,26 @@ export default function Home() {
     };
 
     const handleOffline = () => {
-      setError("اتصال به اینترنت برقرار نیست. لطفاً اتصال خود را بررسی کنید.");
+      setError(t("noConnectionErrorMessage"));
     };
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
   if (error) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
-        <Alert severity="error" sx={{ width: "100%", maxWidth: "600px", direction: "rtl" }}>
-          <AlertTitle>خطا</AlertTitle>
+        <Alert
+          severity="error"
+          sx={{ width: "100%", maxWidth: "600px", direction: "rtl" }}
+        >
+          <AlertTitle>{t("error")}</AlertTitle>
           {error}
         </Alert>
       </Box>

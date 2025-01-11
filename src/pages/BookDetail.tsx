@@ -7,6 +7,7 @@ import PersianEbookCard from "../components/BookMoreInfo";
 import EmptyBookDetail from "../components/EmptyBookDetail";
 import { createBookDetailsData } from "../components/BookDetailData";
 import DetailButtons from "../components/DetailButtons";
+import { t } from "../hooks/useTranslate";
 
 const BookDetail = () => {
   const bookDetailsRef = useRef(null);
@@ -63,7 +64,7 @@ const BookDetail = () => {
                 ":hover": { textDecoration: "underline" },
                 cursor: "pointer",
               }}
-            >{`کتاب‌ها `}</Typography>
+            >{t("books")}</Typography>
             <Typography
               sx={{ wordBreak: "break-word" }}
             >{` / ${book?.title}`}</Typography>
