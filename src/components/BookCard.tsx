@@ -182,13 +182,13 @@ export default function BookCard({
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                maxWidth: "110px",
+                // maxWidth: "110px",
                 mt: 1,
                 height: "110px",
               }}
             >
-              <Typography sx={{ fontSize: "14px" }}>{book?.title}</Typography>
-              <Typography>
+              <Typography sx={{ fontSize: "14px", fontWeight:500 }}>{book?.title}</Typography>
+              <Typography sx={{ fontSize: "13px" , mt:0.4 }}>
                 {book?.authors ? getAuthorsNames(book?.authors) : ""}
               </Typography>
               <Typography sx={{ fontSize: "12px" }}>
@@ -198,7 +198,7 @@ export default function BookCard({
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Typography sx={{ fontSize: "13px" }}>
+            <Typography sx={{ fontSize: "15px" , fontWeight:600}}>
             {book?.price ? toPersianNumbers(priceSeparator(book?.price)) : ""} ت
             </Typography>
           </Box>
