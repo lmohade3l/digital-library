@@ -173,7 +173,7 @@ export default function BookList({
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: smallTablet
+          gridTemplateColumns:phone?"1fr" : smallTablet
             ? "1fr 1fr"
             : mediumScreenTablet
             ? "1fr 1fr 1fr 1fr"
