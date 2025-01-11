@@ -3,7 +3,7 @@ import { Box, Typography, useMediaQuery } from "@mui/material";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { bookType } from "../types/book";
 import { theme } from "../theme";
-import PersianEbookCard from "../components/BookMoreInfo";
+import PersianEbookCard from "../features/BookMoreInfo";
 import EmptyBookDetail from "../components/EmptyBookDetail";
 import { createBookDetailsData } from "../components/BookDetailData";
 import DetailButtons from "../components/DetailButtons";
@@ -64,7 +64,9 @@ const BookDetail = () => {
                 ":hover": { textDecoration: "underline" },
                 cursor: "pointer",
               }}
-            >{t("books")}</Typography>
+            >
+              {t("books")}
+            </Typography>
             <Typography
               sx={{ wordBreak: "break-word" }}
             >{` / ${book?.title}`}</Typography>
@@ -92,13 +94,15 @@ const BookDetail = () => {
                 width: isUnder700px ? "100%" : "250px",
                 minWidth: isUnder700px ? "auto" : "250px",
                 height: "fit-content",
+                display: "flex",
+                justifyContent: "center",
               }}
             >
               <img
                 src={book.coverUri}
                 alt={`${book.title} cover`}
                 style={{
-                  width: "100%",
+                  width: phone ? "80%" : "100%",
                   aspectRatio: "2/3",
                   objectFit: "cover",
                   boxShadow: `0 2px 4px 0 ${theme.palette.secondary.main}, 0 3px 10px 0 ${theme.palette.secondary.main}`,
