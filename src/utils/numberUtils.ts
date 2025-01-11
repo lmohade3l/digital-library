@@ -1,4 +1,5 @@
 export const toPersianNumbers = (text: string | number): string => {
+    if(!text) return ""
     const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
     
     return text
