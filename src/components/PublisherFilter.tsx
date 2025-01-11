@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Button,
   Menu,
@@ -6,14 +6,15 @@ import {
   Checkbox,
   FormControlLabel,
   Box,
-  Divider,
-  Paper
-} from '@mui/material';
+  Paper,
+} from "@mui/material";
 import PulicherIcon from "../assets/images/publisher.png";
 
-
-
-const PublisherFilterMenu = ({ publishers, selectedPublishers, setSelectedPublishers }) => {
+const PublisherFilterMenu = ({
+  publishers,
+  selectedPublishers,
+  setSelectedPublishers,
+}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [tempSelected, setTempSelected] = useState(selectedPublishers);
   const open = Boolean(anchorEl);
@@ -28,9 +29,9 @@ const PublisherFilterMenu = ({ publishers, selectedPublishers, setSelectedPublis
   };
 
   const handleCheckboxChange = (publisher) => {
-    setTempSelected(prev => 
+    setTempSelected((prev) =>
       prev.includes(publisher)
-        ? prev.filter(p => p !== publisher)
+        ? prev.filter((p) => p !== publisher)
         : [...prev, publisher]
     );
   };
@@ -51,10 +52,23 @@ const PublisherFilterMenu = ({ publishers, selectedPublishers, setSelectedPublis
       <Button
         variant="outlined"
         onClick={handleClick}
-        sx={{ backgroundColor: '#FFFFFF', border:"1px solid #000", color:'#000', display:'flex', gap:0.4, borderRadius:"15px"}}
+        sx={{
+          backgroundColor: "#FFFFFF",
+          border: "1px solid #000",
+          color: "#000",
+          display: "flex",
+          gap: 0.4,
+          borderRadius: "15px",
+        }}
       >
-        انتخاب ناشران
-        <img src={PulicherIcon} alt='' style={{width:"20px"}} />
+        {selectedPublishers?.length === 0
+          ? "انتخاب ناشران "
+          : selectedPublishers?.join("، ").substring(0, 20) +
+            (selectedPublishers?.length > 1 &&
+            selectedPublishers?.join("، ")?.length > 20
+              ? "..."
+              : "")}
+        <img src={PulicherIcon} alt="" style={{ width: "20px" }} />
       </Button>
       <Menu
         anchorEl={anchorEl}
@@ -62,14 +76,14 @@ const PublisherFilterMenu = ({ publishers, selectedPublishers, setSelectedPublis
         onClose={handleClose}
         PaperProps={{
           style: {
-            width: '350px',
-            direction: 'rtl'
-          }
+            width: "350px",
+            direction: "rtl",
+          },
         }}
       >
-        <Paper sx={{ maxHeight: '400px', overflow: 'auto' }}>
+        <Paper sx={{ maxHeight: "400px", overflow: "auto" }}>
           {publishers.map((publisher) => (
-            <MenuItem key={publisher} sx={{ padding: '0 16px' }}>
+            <MenuItem key={publisher} sx={{ padding: "0 16px" }}>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -79,26 +93,32 @@ const PublisherFilterMenu = ({ publishers, selectedPublishers, setSelectedPublis
                 }
                 label={publisher}
                 sx={{
-                  width: '100%',
-                  '& .MuiFormControlLabel-label': {
-                    whiteSpace: 'normal',
-                    wordBreak: 'break-word'
-                  }
+                  width: "100%",
+                  "& .MuiFormControlLabel-label": {
+                    whiteSpace: "normal",
+                    wordBreak: "break-word",
+                  },
                 }}
               />
             </MenuItem>
           ))}
         </Paper>
-        <Box 
-          sx={{ 
-            position: 'sticky',
+        <Box
+          sx={{
+            position: "sticky",
             bottom: 0,
-            backgroundColor: 'background.paper',
-            borderTop: '1px solid',
-            borderColor: 'divider',
+            backgroundColor: "background.paper",
+            borderTop: "1px solid",
+            borderColor: "divider",
           }}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '16px' }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: "16px",
+            }}
+          >
             <Button
               variant="contained"
               color="primary"
