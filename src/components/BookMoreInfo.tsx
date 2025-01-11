@@ -5,7 +5,7 @@ import { Box, styled } from '@mui/system';
 
 // Custom styled components
 const StyledCard = styled(Card)({
-  maxWidth: 400,
+  maxWidth: 350,
   marginTop: '2rem',
   marginBottom: '2rem',
   padding: '1rem',
