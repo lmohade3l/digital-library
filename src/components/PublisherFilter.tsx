@@ -14,12 +14,16 @@ const PublisherFilterMenu = ({
   publishers,
   selectedPublishers,
   setSelectedPublishers,
+}: {
+  publishers: string[];
+  selectedPublishers: string[];
+  setSelectedPublishers: (value : string[]) => void
 }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [tempSelected, setTempSelected] = useState(selectedPublishers);
   const open = Boolean(anchorEl);
 
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
     setTempSelected([...selectedPublishers]);
   };
@@ -28,7 +32,7 @@ const PublisherFilterMenu = ({
     setAnchorEl(null);
   };
 
-  const handleCheckboxChange = (publisher) => {
+  const handleCheckboxChange = (publisher:string) => {
     setTempSelected((prev) =>
       prev.includes(publisher)
         ? prev.filter((p) => p !== publisher)

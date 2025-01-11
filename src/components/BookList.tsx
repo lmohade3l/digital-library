@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  TextField,
   Typography,
   useMediaQuery,
   Menu,
@@ -10,11 +9,12 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { useState, useMemo } from "react";
+
 import { bookType } from "../types/book";
 import { theme } from "../theme";
 import BookCard from "./BookCard";
-import SortIcon from "../assets/images/sort-icon.png";
 import PublisherFilterMenu from "./PublisherFilter";
+import SortIcon from "../assets/images/sort-icon.png";
 
 export default function BookList({
   bookList,
@@ -25,6 +25,15 @@ export default function BookList({
   sortOption,
   setSortOption,
   hasMore,
+} : {
+  bookList: bookType[],
+  isLoading: boolean,
+  lastBookRef,
+  selectedPublishers: string[],
+  setSelectedPublishers :(value:string[]) => void,
+  sortOption:string,
+  setSortOption: (value:string) => void,
+  hasMore: boolean,
 }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -56,10 +65,10 @@ export default function BookList({
       );
     }
     const sortingOptions = {
-      گرانترین: (a, b) => b.price - a.price,
-      ارزانترین: (a, b) => a.price - b.price,
-      "بیشترین امتیاز": (a, b) => b.rating - a.rating,
-      "کمترین امتیاز": (a, b) => a.rating - b.rating,
+      گرانترین: (a:bookType, b:bookType) => b.price - a.price,
+      ارزانترین: (a:bookType, b:bookType) => a.price - b.price,
+      "بیشترین امتیاز": (a:bookType, b:bookType) => b.rating - a.rating,
+      "کمترین امتیاز": (a:bookType, b:bookType) => a.rating - b.rating,
     };
 
     return sortingOptions[sortOption]

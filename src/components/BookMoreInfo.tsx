@@ -1,15 +1,11 @@
-import React from 'react';
 import { Card, CardContent, IconButton } from '@mui/material';
-import { ArrowBack } from '@mui/icon÷s-material';
 import { Box, styled } from '@mui/system';
 
-// Custom styled components
 const StyledCard = styled(Card)({
   maxWidth: 350,
   marginTop: '2rem',
   marginBottom: '2rem',
   padding: '1rem',
-//   direction: 'rtl',
 borderRadius:"10px"
 });
 
@@ -21,7 +17,6 @@ const Header = styled('div')({
   paddingBottom: '1rem',
   paddingRight: '4rem',
   paddingLeft: '4rem',
-//   marginBottom: '1rem'
 });
 
 const Title = styled('h3')({
@@ -32,8 +27,6 @@ const Title = styled('h3')({
 const InfoGrid = styled('div')({
   display: 'grid',
   gridTemplateColumns: 'repeat(3, 1fr)',
-//   gap: '1rem',
-//   margin: '1.5rem 0',
   textAlign: 'center'
 });
 

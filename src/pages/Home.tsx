@@ -174,6 +174,7 @@ export default function Home() {
           setSelectedPublishers={setSelectedPublishers}
           sortOption={sortOption}
           setSortOption={setSortOption}
+          hasMore={hasMore}
         />
       </Box>
     );
