@@ -2,9 +2,11 @@ import { Box, Skeleton, Typography, useMediaQuery } from "@mui/material";
 import { bookType } from "../types/book";
 import { getAuthorsNames } from "../utils/getAuthorsNames";
 import { getRartingAndCount } from "../utils/getRatingAndCount";
-import { priceSeparator } from "../utils/priceSeparator";
+import { priceSeparator, toPersianNumbers } from "../utils/numberUtils";
 import { theme } from "../theme";
 import { useNavigate } from "react-router-dom";
+import StarIcon from "../assets/images/star.png";
+import { t } from "../hooks/useTranslate";
 
 export default function BookCard({
   book,
@@ -101,8 +103,11 @@ export default function BookCard({
             mt: 2,
             border: `1px solid ${theme.palette.secondary.main}`,
             borderRadius: "10px",
+            width: "100%",
           }}
-          onClick={() => book && navigate(`/book/${book.id}`, { state: { book } })}
+          onClick={() =>
+            book && navigate(`/book/${book.id}`, { state: { book } })
+          }
         >
           <img
             src={book?.coverUri}
@@ -135,13 +140,16 @@ export default function BookCard({
                 {book?.authors ? getAuthorsNames(book?.authors) : ""}
               </Typography>
               <Typography sx={{ fontSize: "12px" }}>
-                {book ? getRartingAndCount(book) : ""}
+                {book ? getRartingAndCount(book).ratingCount : ""}
               </Typography>
             </Box>
 
             <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
               <Typography sx={{ fontSize: "13px" }}>
-                {book?.price ? priceSeparator(book?.price) : ""} ت
+                {book?.price
+                  ? toPersianNumbers(priceSeparator(book?.price))
+                  : ""}{" "}
+                {t("t")}
               </Typography>
             </Box>
           </Box>
@@ -152,16 +160,18 @@ export default function BookCard({
             display: "flex",
             flexDirection: "column",
             py: 1.5,
-            px: 3,
+            px: 2,
             bgcolor: "#FFF",
             mt: 2,
             border: `1px solid ${theme.palette.secondary.main}`,
             borderRadius: "10px",
             mx: 1,
             justifyContent: "space-between",
+            height: "auto",
           }}
-
-          onClick={() => book && navigate(`/book/${book.id}`, { state: { book } })}
+          onClick={() =>
+            book && navigate(`/book/${book.id}`, { state: { book } })
+          }
         >
           <Box>
             <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -169,7 +179,7 @@ export default function BookCard({
                 src={book?.coverUri}
                 alt=""
                 style={{
-                  width: "95%",
+                  width: "97%",
                   boxShadow: `0 2px 4px 0 ${theme.palette.secondary.main}, 0 3px 10px 0 ${theme.palette.secondary.main}`,
                   cursor: "pointer",
                   borderRadius: "4px",
@@ -181,25 +191,35 @@ export default function BookCard({
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                maxWidth: "110px",
                 mt: 1,
                 height: "110px",
               }}
             >
-              <Typography sx={{ fontSize: "14px" }}>{book?.title}</Typography>
-              <Typography>
+              <Typography sx={{ fontSize: "14px", fontWeight: 500 }}>
+                {book?.title}
+              </Typography>
+              <Typography sx={{ fontSize: "13px", mt: 0.4 }}>
                 {book?.authors ? getAuthorsNames(book?.authors) : ""}
               </Typography>
-              <Typography sx={{ fontSize: "12px" }}>
-                {book ? getRartingAndCount(book) : ""}
-              </Typography>
+
+              <Box sx={{ display: "flex", gap: 0.5, mt: "2px" }}>
+                <img
+                  src={StarIcon}
+                  alt="star"
+                  style={{ width: "12px", height: "12px", marginTop: "0.7px" }}
+                />
+                <Typography sx={{ fontSize: "12px" }}>
+                  {book ? getRartingAndCount(book).ratingCount : ""}
+                </Typography>
+              </Box>
             </Box>
           </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <Typography sx={{ fontSize: "13px" }}>
-              {book?.price ? priceSeparator(book?.price) : ""} ت
+          <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 0.4 }}>
+            <Typography sx={{ fontSize: "16px", fontWeight: 600 }}>
+              {book?.price ? toPersianNumbers(priceSeparator(book?.price)) : ""}
             </Typography>
+            <Typography sx={{ fontSize: "16px" }}>{t("t")}</Typography>
           </Box>
         </Box>
       )}

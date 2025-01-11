@@ -1,3 +1,21 @@
 body {
     direction: rtl;
+    font-family: Vazirmatn, sans-serif;
 }
+
+/* @font-face {
+	font-family: 'iransans';
+	font-weight: 400;
+	src: url(assets/fonts/iransans/iransans-400.woff);
+} */
+
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('fonts/woff/Vazirmatn-Black.woff2') format('woff2 supports variations'),
+    url('fonts/woff/Vazirmatn[200].woff2') format('woff2-variations'),
+    url('fonts/woff/Vazirmatn[wght].woff2') format('woff2-variations'),
+    url('fonts/woff/Vazirmatn[wght].woff2') format('woff2-variations');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+  }

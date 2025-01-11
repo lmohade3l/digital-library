@@ -1,162 +1,158 @@
-import React, { useRef } from 'react';
-import html2canvas from 'html2canvas';
-import { Box, Button, Typography, Skeleton } from '@mui/material';
-import { useLocation, useParams, useNavigate } from 'react-router-dom';
-import { bookType } from '../types/book';
-import { theme } from '../theme';
-import { priceSeparator } from '../utils/priceSeparator';
+import { useEffect, useRef } from "react";
+import { Box, Typography, useMediaQuery } from "@mui/material";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { bookType } from "../types/book";
+import { theme } from "../theme";
+import PersianEbookCard from "../components/BookMoreInfo";
+import EmptyBookDetail from "../components/EmptyBookDetail";
+import { createBookDetailsData } from "../components/BookDetailData";
+import DetailButtons from "../components/DetailButtons";
+import { t } from "../hooks/useTranslate";
 
 const BookDetail = () => {
   const bookDetailsRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
   const { id } = useParams();
-  
-  // Get book from location state
+
+  const isUnder700px = useMediaQuery("(max-width:700px)");
+  const mediumScreenTablet = useMediaQuery(theme.breakpoints.down("lg"));
+  const smallTablet = useMediaQuery(theme.breakpoints.down("ssm"));
+  const phone = useMediaQuery(theme.breakpoints.down("xxs"));
+
   const book: bookType | undefined = location.state?.book;
-  
-  React.useEffect(() => {
+
+  const bookData = book && createBookDetailsData({ book, phone });
+
+  useEffect(() => {
     if (!book && id) {
-      navigate('/');
-      // Alternative: fetch book data
-      // fetchBookById(id).then(bookData => setBook(bookData));
+      navigate("/");
     }
   }, [book, id, navigate]);
 
-  const handleShare = async () => {
-    try {
-      if (!bookDetailsRef.current) return;
-
-      const canvas = await html2canvas(bookDetailsRef.current);
-      const imageBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-      
-      if (navigator.share) {
-        await navigator.share({
-          title: `کتاب ${book?.title}`,
-          text: `مشاهده جزئیات کتاب ${book?.title}`,
-          files: [new File([imageBlob], 'book-details.png', { type: 'image/png' })]
-        });
-      } else {
-        const shareUrl = URL.createObjectURL(imageBlob);
-        const a = document.createElement('a');
-        a.href = shareUrl;
-        a.download = 'book-details.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(shareUrl);
-      }
-    } catch (error) {
-      console.error('Error sharing:', error);
-    }
-  };
-
   if (!book) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'between', p: 4 }}>
-        <Box sx={{ display: 'flex', gap: 4 }}>
-          <Skeleton
-            variant="rectangular"
-            width={256}
-            height={400}
-            sx={{ borderRadius: '4px' }}
-          />
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Skeleton width={200} height={30} />
-            <Skeleton width={150} height={24} />
-            <Skeleton width={100} height={24} />
-            <Skeleton width={120} height={24} />
-            <Skeleton width={140} height={24} />
-            <Skeleton width={160} height={24} />
-            <Skeleton width={180} height={24} />
-            <Skeleton width={400} height={100} />
-          </Box>
-        </Box>
-      </Box>
-    );
+    return <EmptyBookDetail />;
   }
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'between', p: 4 }}>
-      <Box sx={{ display: 'flex', gap: 4 }} ref={bookDetailsRef}>
-        <img 
-          src={book.coverUri} 
-          alt={`${book.title} cover`}
-          style={{
-            width: '256px',
-            height: 'auto',
-            objectFit: 'contain',
-            boxShadow: `0 2px 4px 0 ${theme.palette.secondary.main}, 0 3px 10px 0 ${theme.palette.secondary.main}`,
-            borderRadius: '4px',
+    <Box
+      sx={{
+        display: "flex",
+        py: 3,
+        px: { xxs: 0, ssm: 0 },
+        minHeight: { xxs: "auto", lg: "calc(100vh - 130px)" },
+        justifyContent: "center",
+        overflow: "auto",
+      }}
+    >
+      <Box sx={{ width: "100%", maxWidth: "1200px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 2,
+            mb: 3,
           }}
-        />
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-            {`کتاب ${book.title}`}
-          </Typography>
-          
-          <Typography>
-            {`نویسنده: ${book.authors?.join('، ')}`}
-          </Typography>
-          
-          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-            <Typography>امتیاز:</Typography>
-            <Box>
-              <Typography>{book.rating?.toFixed(1)}</Typography>
-            </Box>
-            <Typography>{`از ${book.ratingCount || 0} رای`}</Typography>
+        >
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <Typography
+              onClick={() => history.back()}
+              sx={{
+                wordBreak: "break-word",
+                ":hover": { textDecoration: "underline" },
+                cursor: "pointer",
+              }}
+            >{t("books")}</Typography>
+            <Typography
+              sx={{ wordBreak: "break-word" }}
+            >{` / ${book?.title}`}</Typography>
           </Box>
-          
-          <Typography>
-            {`قیمت: ${priceSeparator(book.price)} ت`}
-          </Typography>
-          
-          <Typography>
-            {`ناشر: ${book.publisher}`}
-          </Typography>
-          
-          <Typography>
-            {`قیمت فیزیکی: ${priceSeparator(book.physicalPrice)} ت`}
-          </Typography>
-          
-          <Typography>
-            {`تعداد صفحات: ${book.numberOfPages}`}
-          </Typography>
-          
-          <Typography sx={{ maxWidth: '600px' }}>
-            {`توضیحات: ${book.descriptions}`}
-          </Typography>
-          
-          <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
-            <Button 
-              onClick={() => window.open(`https://taaghche.com/book/${book.id}`, '_blank')}
-              variant="contained"
-              color="primary"
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xxs: "column", lg: "row" },
+            justifyContent: "space-between",
+            gap: 4,
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: isUnder700px ? "column" : "row",
+              gap: 4,
+              width: "100%",
+            }}
+            ref={bookDetailsRef}
+          >
+            <Box
               sx={{
-                bgcolor: theme.palette.primary.main,
-                color: '#FFF',
-                '&:hover': {
-                  bgcolor: theme.palette.primary.dark,
-                },
+                width: isUnder700px ? "100%" : "250px",
+                minWidth: isUnder700px ? "auto" : "250px",
+                height: "fit-content",
               }}
             >
-              جزییات بیشتر
-            </Button>
-            
-            <Button
-              onClick={handleShare}
-              variant="contained"
-              color="success"
+              <img
+                src={book.coverUri}
+                alt={`${book.title} cover`}
+                style={{
+                  width: "100%",
+                  aspectRatio: "2/3",
+                  objectFit: "cover",
+                  boxShadow: `0 2px 4px 0 ${theme.palette.secondary.main}, 0 3px 10px 0 ${theme.palette.secondary.main}`,
+                  borderRadius: "4px",
+                }}
+              />
+            </Box>
+
+            <Box
               sx={{
-                bgcolor: theme.palette.success.main,
-                color: '#FFF',
-                '&:hover': {
-                  bgcolor: theme.palette.success.dark,
-                },
+                display: "flex",
+                flexDirection: "column",
+                gap: 1,
+                width: "100%",
               }}
             >
-              اشتراک‌گذاری
-            </Button>
+              {bookData?.map((item) =>
+                item.customComponent ? (
+                  <Box key={item.id}>{item.customComponent}</Box>
+                ) : (
+                  <Typography
+                    key={item.id}
+                    variant={item.isTitle ? "h5" : "body1"}
+                    sx={{
+                      wordBreak: "break-word",
+                      fontSize: phone
+                        ? item.isTitle
+                          ? "1.2rem"
+                          : "0.875rem"
+                        : item.isTitle
+                        ? "1.5rem"
+                        : "1rem",
+                      fontWeight: item.isTitle ? "bold" : "normal",
+                    }}
+                  >
+                    {item.isTitle
+                      ? `${item.title} ${item.value}`
+                      : `${item.title}: ${item.value}`}
+                  </Typography>
+                )
+              )}
+
+              <DetailButtons book={book} bookDetailsRef={bookDetailsRef} />
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              width: mediumScreenTablet ? "100%" : "auto",
+              display: smallTablet ? "none" : "flex",
+              justifyContent: "center",
+            }}
+          >
+            <PersianEbookCard />
           </Box>
         </Box>
       </Box>

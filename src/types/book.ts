@@ -10,7 +10,7 @@ export type bookType = {
   rates: rateType[];
   id: number;
   publisher: string;
-  physicalPrice: number;
+  PhysicalPrice: number;
   numberOfPages: number;
   description: string;
 };
